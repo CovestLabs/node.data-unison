@@ -19,7 +19,7 @@
     "changeset": "changeset",
     "publish": "changeset publish",
     "publish:prod": "changeset pre exit && pnpm run version && pnpm run publish",
-    "publish:pre": "changeset pre enter next && pnpm run publish",
+    "publish:pre": "changeset pre enter beta && pnpm run publish",
     "version": "changeset version"
   },
   "keywords": [

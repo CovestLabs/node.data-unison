@@ -17,7 +17,7 @@
     "build": "tsup lib/index.ts --dts --format cjs,esm",
     "lint": "tsc",
     "changeset": "changeset",
-    "release": "changeset publish",
+    "publish": "changeset publish",
     "version-packages": "changeset version"
   },
   "keywords": [

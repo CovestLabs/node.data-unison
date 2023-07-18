@@ -1,0 +1,47 @@
+{
+  "name": "@covestlabs/data-unison",
+  "version": "0.0.0",
+  "description": "Decentralized Data Exchange",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "homepage:": "https://github.com/Covest-Finance/node.data-unison#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Covest-Finance/node.data-unison.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup lib/index.ts --dts --format cjs,esm",
+    "lint": "tsc",
+    "changeset": "changeset",
+    "release": "changeset publish",
+    "version-packages": "changeset version"
+  },
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "smart",
+    "contracts",
+    "data",
+    "unison",
+    "covest",
+    "covestlabs"
+  ],
+  "author": "CovestLabs <nawapat.b@covest.finance>",
+  "license": "MIT",
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.4.8",
+    "@changesets/cli": "^2.26.2",
+    "tslib": "^2.6.0",
+    "tsup": "^7.1.0",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "@enzoferey/ethers-error-parser": "^0.2.3",
+    "axios": "^1.4.0",
+    "ethers": "^6.6.2"
+  }
+}

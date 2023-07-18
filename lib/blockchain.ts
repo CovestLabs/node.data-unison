@@ -1,4 +1,4 @@
-import { isAddress, isBytes32 } from "./utils";
+import { isAddress, isBytes32, ZeroAddress } from "./utils";
 import { ethers, Signer, Provider, Contract } from "ethers";
 import {
 	EthersError,
@@ -74,6 +74,7 @@ export interface DataUnisonBlockchainInteraction {
 }
 
 export interface DataUnisonBlockchainPrivate {
+	chainId: number;
 	reference?: string;
 	provider: Signer | Provider;
 	contract: DataUnisonBlockchainContractPrivate;
@@ -93,13 +94,26 @@ class DataUnisonInternalBlockchain {
 		}
 	}
 
+	protected async _getChainId(provider: Signer | Provider): Promise<number> {
+		const network = await provider.provider?.getNetwork();
+
+		if (!network) return Promise.reject("Network not found");
+
+		const { chainId } = network;
+
+		return parseInt(chainId.toString());
+	}
+
 	protected async _readContract(
-		c: Contract,
+		provider: Signer | Provider,
+		contract: Contract,
 		func: string,
 		params: Array<any> = [],
 	): Promise<any> {
 		try {
-			const result = await c?.[`${func}`]?.(...params);
+			const result = await (contract.connect(provider) as any)?.[`${func}`]?.(
+				...params,
+			);
 
 			return Promise.resolve(result);
 		} catch (e) {
@@ -112,12 +126,15 @@ class DataUnisonInternalBlockchain {
 	}
 
 	protected async _writeContract(
-		c: Contract,
+		provider: Signer | Provider,
+		contract: Contract,
 		func: string,
 		params: Array<any> = [],
 	): Promise<any> {
 		try {
-			const tx = await c?.[`${func}`]?.(...params);
+			const tx = await (contract.connect(provider) as any)?.[`${func}`]?.(
+				...params,
+			);
 
 			await tx?.wait();
 
@@ -135,13 +152,18 @@ class DataUnisonInternalBlockchain {
 export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 	private state: DataUnisonBlockchainPrivate;
 
-	constructor(address: string, provider: Signer | Provider) {
+	constructor(
+		chainId: number,
+		registrarAddress: string,
+		provider: Signer | Provider,
+	) {
 		super();
 
 		this.state = {
+			chainId: chainId,
 			provider,
 			contract: {
-				registrar: new ethers.Contract(address, Abi.Registrar, provider),
+				registrar: new ethers.Contract(registrarAddress, Abi.Registrar),
 			},
 		};
 	}
@@ -166,12 +188,26 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 		}
 	}
 
+	async setProvider(provider: Signer | Provider): Promise<void> {
+		if ((await this._getChainId(provider)) == this.state.chainId)
+			this.state.provider = provider;
+		else
+			throw new Error(
+				"The chainId of the provider does not match the chainId of the contract",
+			);
+	}
+
+	async getSummaryAddress(): Promise<string> {
+		return (await this.state.contract.summary?.getAddress()) ?? ZeroAddress;
+	}
+
 	async resolveReference(summaryAddress: string): Promise<string> {
 		if (!this.state.contract?.registrar)
 			throw new Error("Registrar contract not found");
 
 		try {
 			return await this._readContract(
+				this.state.provider,
 				this.state.contract.registrar,
 				"resolveReference(address)",
 				[summaryAddress],
@@ -187,6 +223,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 
 		try {
 			return await this._readContract(
+				this.state.provider,
 				this.state.contract?.registrar,
 				"resolveSummary(string)",
 				[reference],
@@ -202,6 +239,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 
 		try {
 			return await this._readContract(
+				this.state.provider,
 				this.state.contract?.summary,
 				"custodian()",
 			);
@@ -246,7 +284,11 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 				this.state.provider,
 			);
 
-			const owner = await this._readContract(interaction, "owner()");
+			const owner = await this._readContract(
+				this.state.provider,
+				interaction,
+				"owner()",
+			);
 
 			return owner === (await this.state.contract.summary?.address);
 		} catch (e: any) {
@@ -271,7 +313,11 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 				this.state.provider,
 			);
 
-			const provider = await this._readContract(interaction, "provider()");
+			const provider = await this._readContract(
+				this.state.provider,
+				interaction,
+				"provider()",
+			);
 
 			return provider === (await this.state.contract.summary?.address);
 		} catch (e: any) {
@@ -291,6 +337,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 		if (isAddress(reference_or_interactionAddress) == false) {
 			try {
 				return await this._readContract(
+					this.state.provider,
 					this.state.contract?.summary,
 					"isInteractionExist(string)",
 					[reference_or_interactionAddress],
@@ -301,6 +348,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 		} else {
 			try {
 				return await this._readContract(
+					this.state.provider,
 					this.state.contract?.summary,
 					"isInteractionExist(address)",
 					[reference_or_interactionAddress],
@@ -323,6 +371,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 		if (isAddress(reference_or_interactionAddress)) {
 			try {
 				return await this._readContract(
+					this.state.provider,
 					this.state.contract?.summary,
 					"isInteractionExist(address)",
 					[reference_or_interactionAddress],
@@ -333,6 +382,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 		} else {
 			try {
 				return await this._readContract(
+					this.state.provider,
 					this.state.contract?.summary,
 					"isInteractionExist(string)",
 					[reference_or_interactionAddress],
@@ -349,6 +399,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 
 		try {
 			return await this._readContract(
+				this.state.provider,
 				this.state.contract?.summary,
 				"getInteractionsLength()",
 			);
@@ -370,6 +421,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 
 		try {
 			return await this._readContract(
+				this.state.provider,
 				this.state.contract?.summary,
 				"getInteraction(uint256)",
 				[interactionId],
@@ -402,6 +454,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 
 		try {
 			return await this._readContract(
+				this.state.provider,
 				this.state.contract?.summary,
 				"getInteractions(uint256[])",
 				[interactionIds],
@@ -428,6 +481,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 
 		try {
 			return await this._readContract(
+				this.state.provider,
 				this.state.contract?.summary,
 				"getViewer(uint256,address)",
 				[interactionId, entityAddress],
@@ -448,6 +502,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 
 		try {
 			return await this._readContract(
+				this.state.provider,
 				this.state.contract?.summary,
 				"getDataMerkleRoot(uint256)",
 				[interactionId],
@@ -484,6 +539,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 
 		try {
 			return await this._writeContract(
+				this.state.provider,
 				this.state.contract?.summary,
 				"addInteraction(string,address,uint8)",
 				[reference, interactionAddress, role],
@@ -516,6 +572,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 
 		try {
 			return await this._writeContract(
+				this.state.provider,
 				this.state.contract?.summary,
 				"enableInteraction(uint256)",
 				[interactionId],
@@ -548,6 +605,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 
 		try {
 			return await this._writeContract(
+				this.state.provider,
 				this.state.contract?.summary,
 				"disableInteraction(uint256)",
 				[interactionId],
@@ -587,6 +645,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 
 		try {
 			return await this._writeContract(
+				this.state.provider,
 				this.state.contract?.summary,
 				"assignViewer(uint256,address,uint256)",
 				[interactionId, entityAddress, permissionLevel],
@@ -634,6 +693,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 
 		try {
 			return await this._writeContract(
+				this.state.provider,
 				this.state.contract?.summary,
 				"assignViewer(uint256,address,uint256,uint256)",
 				[interactionId, entityAddress, permissionLevel, deadline],
@@ -658,6 +718,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 
 		try {
 			return await this._writeContract(
+				this.state.provider,
 				this.state.contract?.summary,
 				"setCustodian(address)",
 				[custodianAddress],
@@ -692,6 +753,7 @@ export class DataUnisonBlockchain extends DataUnisonInternalBlockchain {
 
 		try {
 			return await this._writeContract(
+				this.state.provider,
 				this.state.contract?.summary,
 				"setDataMerkleRoot(uint256,bytes32)",
 				[interactionId, merkleRoot],

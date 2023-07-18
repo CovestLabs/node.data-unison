@@ -3,86 +3,85 @@ import { DataUnisonBlockchain } from "./blockchain";
 import { ethers, JsonRpcProvider, Wallet } from "ethers";
 
 export interface DataUnisonClientOptions {
-	privateKey: string;
+	privateKey?: string;
+	apiKey?: string;
 }
 
 export interface DataUnisonClientPrivate {
 	url: string;
-	apiKey: string;
-	privateKey?: string;
 	signer?: Wallet;
 	provider?: JsonRpcProvider;
-	project: DataUnisonClientProjectPrivate;
+	project?: DataUnisonClientProjectPrivate;
 }
 
 export interface DataUnisonClientProjectPrivate {
-	id: number;
-	contracts?: Record<string, string>;
+	id?: string;
+	contract?: Record<string, string>;
 	rpc?: string;
+	chainId?: number;
 }
 
 export class DataUnisonClient {
 	private state: DataUnisonClientPrivate;
-	private server: DataUnisonServer;
+	private serverInstance?: DataUnisonServer;
+	private blockchainInstance?: DataUnisonBlockchain;
 
-	constructor(id: number, apiKey: string, options?: DataUnisonClientOptions) {
-		if (id < 1) throw new Error("Invalid project ID");
-		if (!apiKey) throw new Error("No API Key provided");
-
+	constructor() {
 		this.state = {
 			url,
-			apiKey,
-			privateKey: options?.privateKey,
-			project: {
-				id,
-			},
 		};
-
-		this.server = new DataUnisonServer(id, apiKey);
 	}
 
 	get isDataUnisonClient(): true {
 		return true;
 	}
 
-	async connect(): Promise<void> {
-		if (this.server.isConnected) return;
-
-		await this._connect();
+	async connect(
+		projectId: string,
+		options?: DataUnisonClientOptions,
+	): Promise<void> {
+		await this._connect(projectId, options);
 	}
 
-	private async _connect(): Promise<void> {
-		if (!this.state.apiKey) throw new Error("No API Key provided");
-		if (!this.server) throw new Error("No server provided");
+	private async _connect(
+		projectId: string,
+		options?: DataUnisonClientOptions,
+	): Promise<void> {
+		if (projectId.length == 0) throw new Error("Invalid project ID");
 
-		await this.server.connect();
+		this.serverInstance = new DataUnisonServer(options?.apiKey);
 
-		const data = await this.server.query(`
-            getProjectInfo(id: ${this.state.project.id}) {
+		const data = await this.serverInstance.query(`
+            getProject(id: ${projectId}) {
                 success
-                contracts {
+                contract {
                     registrar
                 }
                 network {
                     rpc
+					chainId
                 }
             }
         `);
 
-		if (!data?.getProjectInfo?.success)
+		if (!data?.getProject?.success)
 			throw new Error(
-				data?.errors?.[0]?.message || data?.errors || "getProjectInfo failed",
+				data?.errors?.[0]?.message || data?.errors || "getProject failed",
 			);
 
-		this.state.project.contracts = data.getProjectInfo.contracts;
-		this.state.project.rpc = data.getProjectInfo.network.rpc;
+		this.state.project = {
+			id: projectId,
+			contract: data.getProject.contract,
+			rpc: data.getProject.network.rpc,
+			chainId: data.getProject.network.chainId,
+		};
 
 		this.state.provider = new ethers.JsonRpcProvider(this.state.project.rpc);
 
-		if (this.state.privateKey) {
+		if (options?.privateKey) {
 			try {
 				this.state.signer = new ethers.Wallet(
-					this.state.privateKey,
+					options.privateKey,
 					this.state.provider,
 				);
 			} catch (e) {
@@ -97,22 +96,48 @@ export class DataUnisonClient {
 
 		try {
 			this.state.signer = new ethers.Wallet(privateKey, this.state.provider);
+
+			if (this?.blockchainInstance)
+				await this.blockchainInstance.setProvider(this.state.signer);
 		} catch (e) {
 			throw new Error("Invalid private key");
 		}
 	}
 
+	async setApiKey(apiKey: string): Promise<void> {
+		if (!apiKey) throw new Error("No API key provided");
+
+		if (this.serverInstance) await this.serverInstance.setApiKey(apiKey);
+	}
+
 	async blockchain(): Promise<DataUnisonBlockchain> {
-		if (!this.server.isConnected) throw new Error("Not connected to server");
+		if (this?.blockchainInstance) return this.blockchainInstance;
 
-		const registrar = this.state.project.contracts?.registrar;
+		return this._blockchain();
+	}
 
-		if (!registrar) throw new Error("Registrar is undefined");
+	private async _blockchain(): Promise<DataUnisonBlockchain> {
+		if (!this.serverInstance?.isConnected)
+			throw new Error("Not connected to server, please connect");
 
-		const signer = this.state.signer || this.state.provider;
+		const chainId = this.state.project?.chainId;
 
-		if (!signer) throw new Error("Signer or provider is undefined");
+		if (!chainId) throw new Error("ChainId is undefined, please connect");
 
-		return new DataUnisonBlockchain(registrar, signer);
+		const registrar = this.state.project?.contract?.registrar;
+
+		if (!registrar) throw new Error("Registrar is undefined, please connect");
+
+		const provider = this.state.signer || this.state.provider;
+
+		if (!provider) throw new Error("Signer or provider is undefined");
+
+		this.blockchainInstance = new DataUnisonBlockchain(
+			chainId,
+			registrar,
+			provider,
+		);
+
+		return this.blockchainInstance;
 	}
 }

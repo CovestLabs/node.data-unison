@@ -6,7 +6,7 @@ export type {
 } from "./client";
 
 export { DataUnisonServer } from "./server";
-export type { DataUnisonServerPrivate, DataUnisonServerToken } from "./server";
+export type { DataUnisonServerPrivate } from "./server";
 
 export { DataUnisonBlockchain } from "./blockchain";
 export type {

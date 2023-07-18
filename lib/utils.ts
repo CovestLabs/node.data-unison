@@ -1,5 +1,7 @@
 import { ethers } from "ethers";
 
+export const ZeroAddress = ethers.ZeroAddress;
+
 export const isAddress = (address: string) => {
 	return ethers.isAddress(address);
 };

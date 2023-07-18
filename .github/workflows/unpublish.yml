@@ -1,4 +1,4 @@
-name: Unublish package
+name: Unublish NPM Package
 
 on:
   workflow_dispatch:

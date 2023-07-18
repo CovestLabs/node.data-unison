@@ -34,6 +34,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v2.2.4
         with:
@@ -48,11 +51,19 @@ jobs:
 
       - run: pnpm build
 
+      - name: Set Publish Command
+        id: set-publish-command
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/beta" ]]; then
+            echo "::set-output name=publish_command::pnpm run publish:beta"
+          else
+            echo "::set-output name=publish_command::pnpm run publish"
+          fi
+
       - name: Create Release Pull Request or Publish
-        id: changesets
         uses: changesets/action@v1
         with:
-          publish: pnpm run publish
+          publish: ${{ steps.set-publish-command.outputs.publish_command }}
           commit: 'chore(release): npm release'
           title: 'Release'
         env:

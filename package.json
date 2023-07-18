@@ -1,6 +1,6 @@
 {
   "name": "@covestlabs/data-unison",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Decentralized Data Exchange",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -18,7 +18,8 @@
     "lint": "tsc",
     "changeset": "changeset",
     "publish": "changeset publish",
-    "version-packages": "changeset version"
+    "publish:beta": "changeset publish --tag beta",
+    "version": "changeset version"
   },
   "keywords": [
     "solidity",
@@ -27,6 +28,8 @@
     "contracts",
     "data",
     "unison",
+    "decentralized",
+    "exchange",
     "covest",
     "covestlabs"
   ],

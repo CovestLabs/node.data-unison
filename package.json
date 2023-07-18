@@ -1,6 +1,6 @@
 {
   "name": "@covestlabs/data-unison",
-  "version": "0.0.4",
+  "version": "0.0.0",
   "description": "Decentralized Data Exchange",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -18,8 +18,6 @@
     "lint": "tsc",
     "changeset": "changeset",
     "publish": "changeset publish",
-    "publish:prod": "changeset pre exit && pnpm run publish",
-    "publish:pre": "changeset pre enter beta",
     "version": "changeset version"
   },
   "keywords": [

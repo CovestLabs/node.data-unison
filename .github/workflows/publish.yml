@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - beta
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -54,21 +53,10 @@ jobs:
       - run: pnpm build
 
       - name: Create Release Pull Request or Publish
-        if: ${{ contains(github.ref, 'main') }}
         uses: changesets/action@v1
         with:
-          publish: pnpm run publish:prod
+          publish: pnpm run publish
           title: 'Release'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Create Release Pull Request or Publish
-        if: ${{ contains(github.ref, 'beta') }}
-        uses: changesets/action@v1
-        with:
-          publish: pnpm run publish:pre
-          title: 'PreRelease'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

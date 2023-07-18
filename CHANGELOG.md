@@ -1,5 +1,11 @@
 # @covestlabs/data-unison
 
+## 0.0.5
+
+### Patch Changes
+
+- [`dd28b10`](https://github.com/Covest-Finance/node.data-unison/commit/dd28b105e4ec3990de5ac512841ffa435b303676) Thanks [@BeamNawapat](https://github.com/BeamNawapat)! - Updated package.json
+
 ## 0.0.4
 
 ### Patch Changes

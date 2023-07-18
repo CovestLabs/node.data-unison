@@ -51,21 +51,22 @@ jobs:
 
       - run: pnpm build
 
-      - name: Set Publish Command
-        id: set-publish-command
-        run: |
-          if [ "${{ github.ref }}" = "refs/heads/beta" ]; then
-            echo "::set-env name=PUBLISH_COMMAND::pnpm run publish:beta"
-          else
-            echo "::set-env name=PUBLISH_COMMAND::pnpm run publish"
-          fi
-
       - name: Create Release Pull Request or Publish
+        if: ${{ contains(github.ref, 'main') }}
         uses: changesets/action@v1
         with:
-          publish: ${{ env.PUBLISH_COMMAND }}
-          commit: 'chore(release): npm release'
+          publish: pnpm run publish:prod
           title: 'Release'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create Release Pull Request or Publish
+        if: ${{ contains(github.ref, 'beta') }}
+        uses: changesets/action@v1
+        with:
+          publish: pnpm run publish:pre
+          title: 'PreRelease'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

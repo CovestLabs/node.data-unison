@@ -18,7 +18,8 @@
     "lint": "tsc",
     "changeset": "changeset",
     "publish": "changeset publish",
-    "publish:beta": "changeset publish --tag beta",
+    "publish:prod": "changeset pre exit && pnpm run version && pnpm run publish",
+    "publish:pre": "changeset pre enter next && pnpm run publish",
     "version": "changeset version"
   },
   "keywords": [

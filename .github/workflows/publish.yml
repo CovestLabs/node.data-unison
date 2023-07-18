@@ -54,16 +54,16 @@ jobs:
       - name: Set Publish Command
         id: set-publish-command
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/beta" ]]; then
-            echo "::set-output name=publish_command::pnpm run publish:beta"
+          if [ "${{ github.ref }}" = "refs/heads/beta" ]; then
+            echo "::set-env name=PUBLISH_COMMAND::pnpm run publish:beta"
           else
-            echo "::set-output name=publish_command::pnpm run publish"
+            echo "::set-env name=PUBLISH_COMMAND::pnpm run publish"
           fi
 
       - name: Create Release Pull Request or Publish
         uses: changesets/action@v1
         with:
-          publish: ${{ steps.set-publish-command.outputs.publish_command }}
+          publish: ${{ env.PUBLISH_COMMAND }}
           commit: 'chore(release): npm release'
           title: 'Release'
         env:

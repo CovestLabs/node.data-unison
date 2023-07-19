@@ -5,10 +5,10 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "homepage:": "https://github.com/Covest-Finance/node.data-unison#readme",
+  "homepage:": "https://github.com/CovestLabs/node.data-unison#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Covest-Finance/node.data-unison.git"
+    "url": "git+https://github.com/CovestLabs/node.data-unison.git"
   },
   "files": [
     "dist"

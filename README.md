@@ -57,13 +57,17 @@ const { DataUnisonClient } = require('@covestlabs/data-unison');
 // Create a new client instance
 const client = new DataUnisonClient();
 
-const projectId = '1';
+const main = async () => {
+  const projectId = '1';
 
-// Connect to the DataUnison server
-await client.connect(projectId);
+  // Connect to the DataUnison server
+  await client.connect(projectId);
 
-// Create a new blockchain instance for the client
-const blockchain = await client.blockchain();
+  // Create a new blockchain instance for the client
+  const blockchain = await client.blockchain();
+}
+
+main().catch(console.error);
 ```
 
 Typescript
@@ -74,13 +78,17 @@ import { DataUnisonClient } from '@covestlabs/data-unison';
 // Create a new client instance
 const client = new DataUnisonClient();
 
-const projectId = '1';
+const main = async () => {
+  const projectId = '1';
 
-// Connect to the DataUnison server
-await client.connect(projectId);
+  // Connect to the DataUnison server
+  await client.connect(projectId);
 
-// Create a new blockchain instance for the client
-const blockchain = await client.blockchain();
+  // Create a new blockchain instance for the client
+  const blockchain = await client.blockchain();
+}
+
+main().catch(console.error);
 ```
 
 ## Example
@@ -90,16 +98,20 @@ import { DataUnisonClient } from '@covestlabs/data-unison';
 // Create a new client instance
 const client = new DataUnisonClient();
 
-const projectId = "1";
+const main = async () => {
+  const projectId = '1';
 
-// Connect to the DataUnison server
-await client.connect(projectId);
+  // Connect to the DataUnison server
+  await client.connect(projectId);
 
-// Create a new blockchain instance for the client
-const blockchain = await client.blockchain();
+  // Create a new blockchain instance for the client
+  const blockchain = await client.blockchain();
 
-const reference = "Hello";
+  const reference = "Hello";
 
-// Get the address of summary that reference is "Hello"
-const resolveSummary = await blockchain.resolveSummary(reference);
+  // Get the address of summary that reference is "Hello"
+  const resolveSummary = await blockchain.resolveSummary(reference);
+}
+
+main().catch(console.error);
 ```

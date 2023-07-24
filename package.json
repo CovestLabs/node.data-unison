@@ -1,7 +1,7 @@
 {
   "name": "@covest-labs/data-unison",
   "version": "0.0.1",
-  "description": "Decentralized Data Exchange",
+  "description": "Accelerating Trustworthiness and Verifiability in Data Exchange",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -29,10 +29,13 @@
     "unison",
     "decentralized",
     "exchange",
+    "trust",
+    "verifiability",
+    "ownership",
     "covest",
     "covestlabs"
   ],
-  "author": "CovestLabs <nawapat.b@covest.finance>",
+  "author": "CovestLabs <tech@covest.finance>",
   "license": "MIT",
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",

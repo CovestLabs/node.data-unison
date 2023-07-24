@@ -11,40 +11,46 @@
 
 ## Introduction
 
-Data Unison SDK: Facilitating Secure, Customizable, and User-friendly Data Exchange
+**Data Unison SDK: Accelerating Trustworthiness and Verifiability in Data Exchange**
 
-Welcome to the future of data collaboration with our Data Unison Software Development Kit (SDK). More than a tool, it's a paradigm shift in how data is shared, controlled, and utilized, underpinned by the unique security and transparency of blockchain technology.
+*"Say goodbye to file attachments and cumbersome forms that make users leave your page. Embrace the future of data interaction with the Data Unison Software Development Kit (SDK) to make data sharing a seamless, secure, and verifiable experience."*
 
-Data Unison SDK orchestrates a balance between ownership, privacy, and security, harnessing the unrivaled capabilities of Non-Fungible Tokens (NFTs) and blockchain technology. It caters to all key players in data sharing - data owners, custodians, providers, and consumers - fostering secure and efficient interaction within a unified data-sharing ecosystem.
+Welcome to a new paradigm of data interaction with our transformative SDK, emphasizing trust and verifiability, and built on the firm foundation of blockchain technology and Non-Fungible Tokens (NFTs).
 
-Data owners, with our SDK, enjoy unparalleled control over their data. Thanks to NFTs, data ownership can be securely linked and managed, independent of a web3 wallet. This innovation allows you to effortlessly transfer the 'custodianship' of your data NFT to a trusted party, such as a family member, enabling them to manage the data on your behalf.
+The core of Data Unison SDK is a comprehensive ecosystem that fosters interaction among all vital stakeholders in data sharing - data owners, custodians, providers, consumers, and reputable verifiers such as banks, universities, regulators, and associations. This ecosystem is designed to ensure secure, efficient, and verifiable interactions, thereby enhancing trust and cooperation.
 
-Data providers benefit from our ground-breaking approach to data security. Data is secured with the hash of a merkle root, allowing progressive display of data fields to consumers. Rather than storing data directly on the blockchain, we store the permissions and the hash of the data. This maintains a secure and verifiable link to the data, ensuring its validity and integrity.
+Data owners can enjoy unparalleled control over their data assets through our SDK. NFTs allow data ownership to be securely linked and managed, independent of a web3 wallet. This facilitates smooth transfer of 'custodianship' of data NFTs to a designated custodian, thus empowering them to manage the data on your behalf.
 
-Data consumers gain significantly from the user-friendly access to data our SDK provides. They can access and utilize the data they need without having to navigate the complexities of data control, enjoying a streamlined, efficient, and trustworthy process. The Data Unison SDK ensures that consumers receive only authentic data, further enhancing trust and cooperation in the data sharing process.
+Data providers take advantage of our pioneering approach to data security and trust. The data is safeguarded with the hash of a merkle root, enabling a progressive display of data fields to consumers. In addition, data providers can substantiate data on the blockchain, paving the way for independent verification by reputable entities. This ensures data validity, integrity, and fortifies trust in the data sharing process.
 
-Our Data Unison SDK heralds a new era in data sharing. It breaks away from traditional models and embraces a future where data exchange is secure, customizable, and user-friendly. Enter a world where data doesn't merely exist - it connects, collaborates, and creates opportunities. Join us in the world of Data Unison.
+Data consumers, with our SDK, enjoy streamlined, user-friendly access to data. They can define the trust level and verification required for the data they access, ensuring interactions only with reliable, authentic data. This bolsters trust and facilitates cooperation in data sharing interactions.
 
-![Picture](https://lh3.googleusercontent.com/drive-viewer/AITFw-zCkgjhHYRmjNsi6lgWRNOcCRZwXw-WiNfeY4VuoLkUw0RprZH3GcYNnByocH5eHvq1xE4uTump2F5RemJuq1vBpxNzHA=s1600)
+Moreover, the Data Unison SDK enables dynamic data exchange, allowing real-time data updates, similar to recurring payments. This ensures not only data relevance but also unveils opportunities for new applications leveraging trustworthy and verifiable real-time data via blockchain.
+
+Our Data Unison SDK sets the stage for a new era in data sharing, with a strong emphasis on trust, verification, and dynamic data interaction. Moving beyond traditional models, we welcome a future where data doesn't just exist - it builds trust, fosters collaboration, and dynamically evolves. Join us in the world of Data Unison and experience the new normal in data interactions.
+
+<p align="center">
+  <img width="750" src="https://lh3.googleusercontent.com/drive-viewer/AITFw-w2MsEdAbBgjgVuRKPQToGLx6ZRIXHS1VTLDkfEyKh2GQPlzfWeg0phdyVJzsxQnFBFidU35Edahg1RDhQ0w9zKgDT5Ug=s1600">
+</p>
 
 ## Installing
 
 Using npm:
 
 ```bash
-$ npm install @covestlabs/data-unison
+$ npm install @covest-labs/data-unison
 ```
 
 Using yarn:
 
 ```bash
-$ yarn add @covestlabs/data-unison
+$ yarn add @covest-labs/data-unison
 ```
 
 Using pnpm:
 
 ```bash
-$ pnpm add @covestlabs/data-unison
+$ pnpm add @covest-labs/data-unison
 ```
 
 ## Usage
@@ -52,7 +58,7 @@ $ pnpm add @covestlabs/data-unison
 Node.js
 
 ```js
-const { DataUnisonClient } = require('@covestlabs/data-unison');
+const { DataUnisonClient } = require('@covest-labs/data-unison');
 
 // Create a new client instance
 const client = new DataUnisonClient();
@@ -73,7 +79,7 @@ main().catch(console.error);
 Typescript
 
 ```ts
-import { DataUnisonClient } from '@covestlabs/data-unison';
+import { DataUnisonClient } from '@covest-labs/data-unison';
 
 // Create a new client instance
 const client = new DataUnisonClient();
@@ -93,7 +99,7 @@ main().catch(console.error);
 
 ## Example
 ```ts
-import { DataUnisonClient } from '@covestlabs/data-unison';
+import { DataUnisonClient } from '@covest-labs/data-unison';
 
 // Create a new client instance
 const client = new DataUnisonClient();

@@ -1,6 +1,6 @@
 {
   "name": "@covest-labs/data-unison",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Decentralized Data Exchange",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

@@ -1,5 +1,11 @@
 # @covest-labs/data-unison
 
+## 0.0.4
+
+### Patch Changes
+
+- [`72f11cc`](https://github.com/CovestLabs/node.data-unison/commit/72f11cc675009099671dfc2d6e786253a657af3f) Thanks [@BeamNawapat](https://github.com/BeamNawapat)! - Install tea
+
 ## 0.0.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@covest-labs/data-unison",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Accelerating Trustworthiness and Verifiability in Data Exchange",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

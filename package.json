@@ -47,6 +47,6 @@
   "dependencies": {
     "@enzoferey/ethers-error-parser": "^0.2.3",
     "axios": "^1.13.2",
-    "ethers": "^6.13.1"
+    "ethers": "^6.15.0"
   }
 }
